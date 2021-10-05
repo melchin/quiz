@@ -62,20 +62,21 @@ export interface ILocationParent {
 }
 
 /**
- * @prop ID -
- * @prop APPLICABLE_DATE -
- * @prop WEATHER_STATE_NAME -
- * @prop WEATHER_STATE_ABBR -
- * @prop WIND_SPEED -
- * @prop WIND_DIRECTION -
- * @prop WIND_DIRECTION_COMPASS -
- * @prop MIN_TEMP -
- * @prop MAX_TEMP -
- * @prop THE_TEMP -
- * @prop AIR_PRESSURE -
- * @prop HUMIDITY -
- * @prop VISIBILITY -
- * @prop PREDICTABILITY -
+ * @prop ID - Internal identifier for the forecast
+ * @prop APPLICABLE_DATE - Date that the forecast or observation pertains to
+ * @prop WEATHER_STATE_NAME - Text description of the weather state
+ * @prop WEATHER_STATE_ABBR - One or two letter abbreviation of the weather state
+ * @prop WIND_SPEED - Speed of Wind
+ * @prop WIND_DIRECTION - Direction of Wind
+ * @prop WIND_DIRECTION_COMPASS - Compass point of Wind direction
+ * @prop MIN_TEMP - Minimum Temperature (C)
+ * @prop MAX_TEMP - Max Temperature (C)
+ * @prop THE_TEMP - Current Temperature (C)
+ * @prop AIR_PRESSURE -Air Pressure (mbar)
+ * @prop HUMIDITY - Humidity (%)
+ * @prop VISIBILITY - Visibility (miles)
+ * @prop PREDICTABILITY - (%) Our interpretation of the level to which the forecasters agree with each other - 100% being a complete consensus.
+ * @prop TITLE - Not included in ConsolidatedWeather, but added for convenience
  */
 export interface ILocationConsolidatedWeather {
   [L_CW_ID]: number;
@@ -92,12 +93,12 @@ export interface ILocationConsolidatedWeather {
   [L_CW_HUMIDITY]: number;
   [L_CW_VISIBILITY]: number;
   [L_CW_PREDICTABILITY]: number;
-  [L_TITLE]: string;
+  [L_TITLE]?: string;
 }
 
 /**
- * @prop TITLE -
- * @propt URL -
+ * @prop TITLE - Name of the source
+ * @propt URL - URL of the source
  */
 export interface ILocationSource {
   [L_S_TITLE]: string;
@@ -105,16 +106,16 @@ export interface ILocationSource {
 }
 
 /**
- * TITLE -
- * LOCATION -
- * LATT -
- * TIME -
- * SUN -
- * SUN -
- * TIMEZONE -
- * PARENT -
- * CONSOLIDATED -
- * SOURCES -
+ * TITLE - Name of the Location
+ * LOCATION - (City|Region / State / Province|Country|Continent)
+ * LATT_LONG - Lat and Long Coordinates (Numbers comma separated)
+ * TIME - Time in Location
+ * SUN_RISE - Time of Sun Rise
+ * SUN_SET - Time of Sun Set
+ * TIMEZONE_NAME - Name of the timezone that the location is in
+ * PARENT - Category
+ * CONSOLIDATED_WEATHER - Category
+ * SOURCES - Category
  */
 export interface ILocation {
   [L_TITLE]: string;

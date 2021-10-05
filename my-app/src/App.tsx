@@ -1,9 +1,7 @@
-import "./App.css";
 import { ILocationConsolidatedWeather } from "interfaces/weatherAPI";
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { consolidatedWeatherTodayByLocation } from "utils/search";
-import { L_CW_WEATHER_STATE_ABBR, L_CW_WEATHER_STATE_NAME, L_TITLE, WEATHER_DOMAIN, WEATHER_IMG_URL } from "constants/weatherResponseFields";
-import { translateWeather } from "utils/conversions";
+import Forecast from "components/Forecast";
 
 function App() {
   let [weather, setWeather] = useState<
@@ -14,11 +12,13 @@ function App() {
 
   let [location, setLocation] = useState<string>('');
 
+  const locationInput = useRef<HTMLInputElement>(null)
+
   const onChangeLocation = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setLocation(e?.currentTarget?.value ?? "");
   }, []);
 
-  const fetchWeather = async () => {
+  const fetchWeather = useCallback(async () => {
     if (location) {
       setLoading(true);
       consolidatedWeatherTodayByLocation(location)
@@ -28,55 +28,33 @@ function App() {
     } else {
       setWeather(undefined)
     }
-  }
+  }, [location])
+
+  useEffect(() => {
+    const ref = locationInput;
+    const submit = (e: KeyboardEvent) => {
+      if (e.code === 'Enter') {
+        ref.current?.blur();
+        fetchWeather();
+      }
+    }
+  
+    ref.current?.addEventListener('keydown', submit);
+    return () => {
+      ref.current?.removeEventListener('keydown', submit)
+    }
+  }, [locationInput, fetchWeather]);
 
   return (
     <div className="App">
       <div>
-        <label>Location:</label>
-        <input type="text" onChange={onChangeLocation} />
+        <label>{`Location: `}</label>
+        <input ref={locationInput} type="text" onChange={onChangeLocation} />
         <button type="submit" disabled={!location.length || loading} onClick={fetchWeather}> SUBMIT </button>
       </div>
       <Forecast data={weather} loading={loading} location={location} />
     </div>
   );
 }
-
-const Forecast: React.FC<{
-  data: ILocationConsolidatedWeather | null | undefined;
-  loading: boolean;
-  location: string;
-}> = (props) => {
-  const { data, loading, location } = props;
-  if (loading) {
-    return <span> Loading Weather Data... </span>
-  }
-  if (data === undefined) {
-    return <span>Type a Location to Find Weather Data</span>
-  } else if (data === null) {
-    return <span>{`Weather Data Could not be found for ${location}`}</span>
-  }
-  return (
-    <div>
-      <h1>{`Today's Forecast in ${data[L_TITLE]}`}</h1>
-      <ul style={{ listStyleType: 'none'}}>
-        <li>
-          <img src={`${WEATHER_DOMAIN}${WEATHER_IMG_URL}${data[L_CW_WEATHER_STATE_ABBR]}.png`} alt={data[L_CW_WEATHER_STATE_NAME]}/>
-        </li>
-        {Object.keys(data).map((property, index) => {
-          const weather = translateWeather(property, data[property as keyof ILocationConsolidatedWeather])
-          if (weather) {
-            return (
-              <li key={property}> 
-                {weather}
-              </li>
-            )
-          }
-          return null;
-        })}
-      </ul>
-    </div>
-  )
-};
 
 export default App;
