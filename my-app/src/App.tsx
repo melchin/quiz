@@ -1,11 +1,13 @@
 import "./App.css";
 import { ILocationConsolidatedWeather } from "interfaces/weatherAPI";
 import React, { ChangeEvent, useCallback, useState } from "react";
-import { consolidatedWeatherByLocation } from "utils/search";
+import { consolidatedWeatherTodayByLocation } from "utils/search";
+import { L_CW_WEATHER_STATE_ABBR, L_CW_WEATHER_STATE_NAME, L_TITLE, WEATHER_DOMAIN, WEATHER_IMG_URL } from "constants/weatherResponseFields";
+import { translateWeather } from "utils/conversions";
 
 function App() {
   let [weather, setWeather] = useState<
-    ILocationConsolidatedWeather[] | null | undefined
+    ILocationConsolidatedWeather | null | undefined
   >(undefined);
 
   let [loading, setLoading] = useState<boolean>(false);
@@ -19,7 +21,7 @@ function App() {
   const fetchWeather = async () => {
     if (location) {
       setLoading(true);
-      consolidatedWeatherByLocation(location)
+      consolidatedWeatherTodayByLocation(location)
         .then((weatherData) => setWeather(weatherData))
         .catch(e => setWeather(null))
         .finally(() => setLoading(false))
@@ -33,7 +35,7 @@ function App() {
       <div>
         <label>Location:</label>
         <input type="text" onChange={onChangeLocation} />
-        <button type="submit" disabled={!location.length} onClick={fetchWeather}> SUBMIT </button>
+        <button type="submit" disabled={!location.length || loading} onClick={fetchWeather}> SUBMIT </button>
       </div>
       <Forecast data={weather} loading={loading} location={location} />
     </div>
@@ -41,10 +43,11 @@ function App() {
 }
 
 const Forecast: React.FC<{
-  data: ILocationConsolidatedWeather[] | null | undefined;
+  data: ILocationConsolidatedWeather | null | undefined;
   loading: boolean;
   location: string;
-}> = ({ data, loading, location }) => {
+}> = (props) => {
+  const { data, loading, location } = props;
   if (loading) {
     return <span> Loading Weather Data... </span>
   }
@@ -55,7 +58,23 @@ const Forecast: React.FC<{
   }
   return (
     <div>
-      // Return the forecast for each day in the list of consoldatedweather
+      <h1>{`Today's Forecast in ${data[L_TITLE]}`}</h1>
+      <ul style={{ listStyleType: 'none'}}>
+        <li>
+          <img src={`${WEATHER_DOMAIN}${WEATHER_IMG_URL}${data[L_CW_WEATHER_STATE_ABBR]}.png`} alt={data[L_CW_WEATHER_STATE_NAME]}/>
+        </li>
+        {Object.keys(data).map((property, index) => {
+          const weather = translateWeather(property, data[property as keyof ILocationConsolidatedWeather])
+          if (weather) {
+            return (
+              <li key={property}> 
+                {weather}
+              </li>
+            )
+          }
+          return null;
+        })}
+      </ul>
     </div>
   )
 };

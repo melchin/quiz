@@ -92,6 +92,7 @@ export interface ILocationConsolidatedWeather {
   [L_CW_HUMIDITY]: number;
   [L_CW_VISIBILITY]: number;
   [L_CW_PREDICTABILITY]: number;
+  [L_TITLE]: string;
 }
 
 /**

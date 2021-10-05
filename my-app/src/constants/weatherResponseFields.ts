@@ -1,6 +1,7 @@
 export const WEATHER_DOMAIN = "https://www.metaweather.com";
 export const LOCATION_SEARCH_URL = "/api/location/search/?query=";
 export const WEATHER_SEARCH_URL = "/api/location/";
+export const WEATHER_IMG_URL = "/static/img/weather/png/64/";
 
 // LOCATION (L)
 export const L_TITLE = "title";
