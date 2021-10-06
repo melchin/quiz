@@ -106,16 +106,16 @@ export interface ILocationSource {
 }
 
 /**
- * TITLE - Name of the Location
- * LOCATION - (City|Region / State / Province|Country|Continent)
- * LATT_LONG - Lat and Long Coordinates (Numbers comma separated)
- * TIME - Time in Location
- * SUN_RISE - Time of Sun Rise
- * SUN_SET - Time of Sun Set
- * TIMEZONE_NAME - Name of the timezone that the location is in
- * PARENT - Category
- * CONSOLIDATED_WEATHER - Category
- * SOURCES - Category
+ * @prop TITLE - Name of the Location
+ * @prop LOCATION - (City|Region / State / Province|Country|Continent)
+ * @prop LATT_LONG - Lat and Long Coordinates (Numbers comma separated)
+ * @prop TIME - Time in Location
+ * @prop SUN_RISE - Time of Sun Rise
+ * @prop SUN_SET - Time of Sun Set
+ * @prop TIMEZONE_NAME - Name of the timezone that the location is in
+ * @prop PARENT - Category
+ * @prop CONSOLIDATED_WEATHER - Category
+ * @prop SOURCES - Category
  */
 export interface ILocation {
   [L_TITLE]: string;
